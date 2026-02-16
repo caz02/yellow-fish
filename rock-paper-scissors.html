@@ -2,16 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="rock-paper-scissors.js"></script>
-    <link rel="stylesheet" href="rock-paper-scissors.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="rock-paper-scissors.css">
+    <script src="rock-paper-scissors.js" defer></script>
 </head>
 <body>
 
-<h1>Rock Paper Scissors Game</h1>
+    <main class="game-container">
+        <h1>Rock Paper Scissors</h1>
+        <p>Play 5 rounds. Click a choice to start.</p>
 
+        <section class="choices" aria-label="Choose your move">
+            <button type="button" data-choice="rock">Rock</button>
+            <button type="button" data-choice="paper">Paper</button>
+            <button type="button" data-choice="scissors">Scissors</button>
+        </section>
 
-    
+        <section class="results" aria-label="Game status">
+            <p>Round: <span id="round-number">0</span> / 5</p>
+            <p>Score — You: <span id="human-score">0</span> | Computer: <span id="computer-score">0</span></p>
+            <p>You chose: <span id="human-choice">—</span></p>
+            <p>Computer chose: <span id="computer-choice">—</span></p>
+            <p id="round-result" role="status" aria-live="polite">Make your choice to begin.</p>
+        </section>
+
+        <button id="restart" type="button" hidden>Play again</button>
+    </main>
 </body>
 </html>
