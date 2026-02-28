@@ -1,0 +1,699 @@
+/* reference for features slider https://www.codingnepalweb.com/responsive-card-slider-javascript/ */
+/* reference for progress list https://codepen.io/Dannzzor/pen/ExaqWY */
+
+/* ===============================
+   CURRYS SANS FONT SETUP
+================================ */
+
+@font-face {
+  font-family: "Currys Sans";
+  src: url("../fonts/currys/CurrysSans-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Currys Sans";
+  src: url("../fonts/currys/CurrysSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Currys Sans";
+  src: url("../fonts/currys/CurrysSans-Headline.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Currys Sans";
+  src: url("../fonts/currys/CurrysSans-Oblique.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root{
+  --bg:#e9eff5;
+  --surface:#ffffff;
+  --text:#0f172a;
+  --muted:#334155;
+  --border:#cbd5e1;
+  --crumb:#dbe4ec;
+  --icon-bg:#cbd5e1;
+  --brand-purple: #4C12A1; 
+  /*figma colours*/
+}
+
+*,
+*::before,
+*::after{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family: "Currys Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height:1.5;
+  background:var(--bg);
+  color:var(--text);
+}
+
+img{ display:block; max-width:100%; height:auto; }
+
+.skip-link{
+  position:absolute;
+  left:12px; top:12px;
+  padding:8px 10px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  transform:translateY(-200%);
+}
+.skip-link:focus{ transform:translateY(0); }
+
+header{ background:var(--surface); }
+
+.nav-icons{
+  display:flex;
+  justify-content:end;
+  gap:16px;
+  padding:18px 16px;
+}
+
+.nav-icon{
+  width:56px; height:56px;
+  border-radius:999px;
+  background:var(--icon-bg);
+  border:0;
+  padding:0;
+  display:grid;
+  place-items:center;
+}
+
+.nav-icon:focus-visible{
+  outline: 3px solid var(--brand-purple);
+  outline-offset: 3px;
+}
+
+.lg-nav:focus-visible {
+  outline: 3px solid var(--brand-purple);
+  outline-offset: 3px;
+}
+
+.nav-icon img{
+  width:24px; height:24px;
+  filter: brightness(0) invert(1);
+}
+
+.breadcrumb{ background:var(--crumb); }
+
+.breadcrumb ol{
+  list-style:none;
+  margin:0;
+  padding:10px 16px;
+  display:flex;
+  justify-content:center;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.breadcrumb li + li::before{
+  content:"/";
+  margin:0 8px;
+  color:#94a3b8;
+}
+
+
+.hero{
+  position: relative;
+  height: 600px;   
+  overflow: hidden;
+}
+
+.hero-bg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  
+}
+
+.hero-logo{
+  position: absolute;
+  left: 50%;
+  top: 50%;                 
+  transform: translate(-50%, -50%);
+  width: min(180px, 70%);   
+  /* responsive size */
+  height: auto;
+  z-index: 1;
+}
+
+.hero-text{
+  padding: 30px;
+  max-width: 60ch;  
+  font-weight: 300;
+  color: black;
+  text-align: center;
+  margin-inline: auto;
+}
+
+.hero-text h1{
+  margin-top: 32px;
+  font-weight: 400;
+  color: #4C12A1;
+  font-size: 28px;
+}
+
+.challenges{
+  background: var(--surface);
+  border: 2px solid var(--brand-purple);
+  border-radius: 24px;
+  width: min(900px, 100% - 32px); 
+  /* bigger on desktop*/
+  margin: 32px auto;
+  padding: 24px 20px;
+}
+
+.challenges h2{
+  font-weight: 500;
+  margin: 0 0 18px;
+  text-align: center;
+  font-size: clamp(1.25rem, 2vw, 1.6rem);
+}
+
+.challenges__list{
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.challenges__list > div{
+  width: 137px;
+  background: #f1f3f5;
+  border-radius: 18px;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.challenges dt,
+.challenges dd{ margin: 0; }
+
+.challenges dd{
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.challenges dt{
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.challenges dd.avail{ color: #e6007e; }
+.challenges dd.comp{ color: #16a34a; }
+
+
+/*SLIDER STYLING*/
+.product-features{
+  --lg-red:#e60012;
+  --lg-bg:#f3f1ea;
+  --lg-card-radius:22px;
+  --lg-card-shadow:0 22px 60px rgba(15,23,42,.14);
+}
+
+.product-features{
+  --lg-red:#e60012;
+  --lg-bg:#f3f1ea;
+  background: var(--lg-bg);
+  padding: 60px 0;
+}
+
+.product-features__title {
+  margin: 0 0 4px;
+  font-weight: 500;
+}
+
+.product-features__title-intro {
+  margin: 0 0 30px;
+}
+
+.product-features__header{
+  text-align: center;
+  background-color:#f3f1ea;
+}
+
+.lg-card__features-title{ 
+  margin: 22px 0 14px; 
+  font-weight: 800; 
+  display: inline-block; 
+  position: relative; 
+  padding-bottom: 10px; 
+} 
+
+.lg-card__features-title::after{ 
+  content: ""; position: 
+  absolute; left: 0; 
+  bottom: 0; 
+  width: 64px; 
+  height: 4px; 
+  border-radius: 999px; 
+  background: var(--lg-red); 
+}
+
+
+
+/* WRAPPER STYLES*/
+.lg-carousel{
+  position: relative;
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 0 80px; /* space for arrows */
+}
+
+.lg-swiper{
+  overflow: hidden;
+}
+
+/* SLIDES*/
+.lg-swiper .swiper-wrapper{
+  display: flex;
+}
+
+.lg-swiper .swiper-slide{
+  flex: 0 0 clamp(280px, 30vw, 380px);
+  height: auto;
+  display: flex;
+}
+
+/*CARDS*/
+.lg-card{
+  background:#fff;
+  border-radius:22px;
+  border: 1px solid rgba(15,23,42,.08);
+  width: 100%;
+  padding: 38px 30px;
+}
+
+
+
+/* ARROWS */
+.lg-carousel .swiper-button-prev,
+.lg-carousel .swiper-button-next{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.lg-carousel .swiper-button-prev:focus-visible,
+.lg-carousel .swiper-button-next:focus-visible{
+  outline: 3px solid var(--lg-red, #e60012);
+  outline-offset: 3px;
+}
+
+.lg-carousel .swiper-button-prev{
+  left: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e60012' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='15 18 9 12 15 6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
+}
+
+.lg-carousel .swiper-button-next{
+  right: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e60012' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px;
+}
+
+
+.lg-carousel .swiper-button-prev::after,
+.lg-carousel .swiper-button-next::after{
+  display: none;
+}
+
+.lg-carousel .swiper-button-prev{
+  left: 0;
+}
+
+.lg-carousel .swiper-button-next{
+  right: 0;
+}
+
+
+.swiper-button-disabled{
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/*PAGINATION*/
+
+.lg-carousel .swiper-pagination {
+  position: relative !important;
+  bottom: auto !important;
+  top: auto !important;
+  left: auto !important;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 36px;
+}
+
+/* branded dots */
+.lg-carousel .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #e60012;
+  opacity: 0.35;
+  border-radius: 999px;
+  transition: all 0.3s ease;
+}
+
+/* active pill */
+.lg-carousel .swiper-pagination-bullet-active {
+  width: 34px;
+  opacity: 1;
+  background: #e60012;
+}
+
+/* AI FEATURES SECTION */
+
+.ai-features {
+  background: #b8b2d8; /* soft lavender */
+  padding: 80px 20px;
+}
+
+.ai-features__header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.ai-features__header h2 {
+  margin: 0;
+  font-size: 23px; 
+  font-weight: 600;
+  background-color: #b8b2d8;
+}
+
+/*  Feature List */
+
+.ai-features__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  width: min(1000px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/*  Individual Feature Card  */
+
+.ai-feature {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+
+  background: #f2f2f7;
+  border-radius: 28px;
+  padding: 30px 40px;
+}
+
+/*  Icon Circle */
+
+.ai-feature__icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #4C12A1; /* purple */
+  color: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.8rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/*  Text Content */
+
+.ai-feature__content {
+  flex: 1;
+}
+
+.ai-feature__text {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  max-width: 800px;
+}
+
+
+
+/* LEARNING PROGRESS */
+
+.learning-progress {
+  background: #f7f8fa;
+  padding: 60px 20px;
+}
+
+.learning-progress__header {
+  text-align: center;
+  margin-bottom: 40px;
+  background: #f7f8fa;
+}
+
+.learning-progress__header h2 {
+  margin: 0 0 6px;
+}
+
+.learning-progress__intro {
+  margin: 0;
+  color: var(--muted);
+}
+
+/*List Layout */
+
+.progress-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  width: min(1000px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Individual Task Row  */
+
+.progress-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+
+  background: #fff;
+  padding: 22px 28px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+/* Left content */
+
+.progress-main h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.progress-main p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* Right side */
+
+.progress-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.progress-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Button */
+
+.progress-btn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: #111;
+  color: #fff;
+}
+
+.progress-btn:focus-visible {
+  outline: 3px solid var(--brand-purple);
+  outline-offset: 3px;
+}
+
+.progress-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* STATE STYLING*/
+
+.progress-item[data-state="complete"] {
+  border-left: 5px solid #16a34a;
+}
+
+.progress-item[data-state="start"] {
+  border-left: 5px solid var(--brand-purple);
+}
+
+.progress-item[data-state="coming-soon"] {
+  opacity: 0.7;
+}
+
+/*FOOTER*/
+.site-footer {
+  background: #dbe1e6; /* soft grey */
+  padding: 25px 20px;
+  text-align: center;
+}
+
+.footer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/*  Back To Top Button */
+
+.footer__top {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid #2c3e46;
+  color: #2c3e46;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.footer__top:hover {
+  background: #2c3e46;
+  color: #fff;
+}
+
+.footer__top:focus-visible {
+  outline: 3px solid var(--brand-purple);
+  outline-offset: 4px;
+}
+
+/* Footer Nav */
+
+.footer__nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 20px;
+}
+
+.footer__nav a {
+  text-decoration: none;
+  color: #2c3e46;
+  font-weight: 500;
+  border-bottom: 2px solid #2c3e46;
+  padding-bottom: 2px;
+}
+
+.footer__nav a:hover {
+  opacity: 0.7;
+}
+
+.footer__nav a:focus-visible {
+  outline: 3px solid var(--brand-purple);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Currys Logo */
+
+.footer__logo {
+  width: 107px;
+  height: 107px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Logo image sizing */
+.footer__logo-img {
+  width: 70%;
+  height: auto;
+  object-fit: contain;
+}
+
+
+/* RESPONSIVE STYLES */
+
+/* Adjust carousel padding on smaller screens */
+@media (max-width: 768px) {
+  .lg-carousel {
+    padding: 0 50px;
+  }
+}
+
+/*smaller text on mobile for features section*/
+@media (max-width: 600px) {
+  .ai-feature__text {
+    font-size: 14px;
+  }
+
+  .ai-feature__icon {
+    width: 51px;
+    height: 53px;
+  }
+
+  .ai-feature {
+    padding: 18px 40px;
+}
+
+.challenges {
+    margin: 32px 16px;
+ }
+}
